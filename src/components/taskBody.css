@@ -21,6 +21,27 @@ input {
   padding: 8px;
 }
 
+.input-icons i {
+  position: absolute;
+}
+
+.icon {
+  padding: 10px;
+  padding-top: 20px;
+  padding-right: 0px;
+  min-width: 40px;
+}
+
+.input-field {
+  width: 88%;
+  text-align: center;
+}
+
+/* .input-icon {
+  background: url(../images/Double_Arrows.png) no-repeat scroll 7px 7px;
+  padding-left: 30px;
+} */
+
 .assign_user {
   margin-top: 10px;
 }
@@ -41,11 +62,12 @@ input {
 }
 
 .form_button {
-  padding: 3px;
+  padding: 5px;
   font-size: 14px;
   margin-top: 10px;
   color: white;
   border-radius: 5px;
   height: 30px;
+  width: 90px;
   background-color: #47bb7f;
 }

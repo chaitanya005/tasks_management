@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import "./tasks.css"
+import moment from 'moment'
+import Tooltip from '@material-ui/core/Tooltip';
 
 import {
   updateTaskState,
@@ -53,14 +55,16 @@ const Tasks = () => {
           <div key = {index} className = "tasks">
             <div>
               <div style = {{fontSize: '20px'}}>{item.task_msg}</div>
-              <p>{item.task_date}</p>
+              <p style = {{color: 'red'}}>{moment(item.task_date).format("MM/DD/YYYY")}</p>
             </div>
+            <Tooltip title="Edit this Task">
               <button
                 className="form_button edit"
                 onClick={() => handleEdit(item)}
               >
               <i class="fa fa-pencil" style = {{fontSize: '20px'}}></i>
               </button>
+            </Tooltip>
           </div>
         ))}
     </div>

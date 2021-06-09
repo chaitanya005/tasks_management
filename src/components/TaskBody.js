@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-
+import Tooltip from '@material-ui/core/Tooltip';
 import "./taskBody.css";
 
 import {
@@ -29,24 +29,24 @@ const TaskBody = () => {
   const handleSubmit = () => {
     if (editData.editTaskData) {
       if (data.assigned_user !== "" && data.is_completed !== ""  && data.task_date !== "" && data.task_time !== "") {
-        axios
-          .put(
-            `https://stage.api.sloovi.com/task/lead_6996a7dcdddc4af3b4f71ccb985cea38/${editData.editTaskData.id}`,
-            data,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-            }
-          )
-          .then((data) => {
-            if (data) {
-              handleCancel();
-            }
-          })
-          .catch((e) => console.log(e));
+      axios
+        .put(
+          `https://stage.api.sloovi.com/task/lead_6996a7dcdddc4af3b4f71ccb985cea38/${editData.editTaskData.id}`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((data) => {
+          if (data) {
+            handleCancel();
+          }
+        })
+        .catch((e) => console.log(e));
       }
     } else {
       if (data.assigned_user !== "" && data.is_completed !== ""  && data.task_date !== "" && data.task_time !== "") {
@@ -82,23 +82,26 @@ const TaskBody = () => {
   };
 
   const handleDelete = () => {
-    axios
-      .delete(
-        `https://stage.api.sloovi.com/task/lead_6996a7dcdddc4af3b4f71ccb985cea38/${editData.editTaskData.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((data) => {
-        if (data) {
-          handleCancel();
-        }
-      })
-      .catch((e) => console.log(e));
+
+    if (window.confirm("Are you sure you want to delete the Task?")) {
+      axios
+        .delete(
+          `https://stage.api.sloovi.com/task/lead_6996a7dcdddc4af3b4f71ccb985cea38/${editData.editTaskData.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((data) => {
+          if (data) {
+            handleCancel();
+          }
+        })
+        .catch((e) => console.log(e));
+      }
   };
 
   useEffect(() => {
@@ -126,22 +129,47 @@ const TaskBody = () => {
         <div className="date">
           <div>Date</div>
           <input
+            style = {{height: '25%'}}
             type="date"
             value={data.task_date}
             onChange={(e) => setData({ ...data, task_date: e.target.value })}
           />
         </div>
-        <div className="time">
+        <div className="time" style = {{marginLeft: "5%"}}>
           <div>Time</div>
-          <input
-            type="time"
-            onChange={(e) => setData({ ...data, task_time: Date.now() })}
-          />
+          <div className = "input-icons">
+            <i className="fa fa-clock-o icon"></i>
+            <input list="time" placeholder = "Time" className = "input-field"/>
+          </div>
+          <datalist id = "time">
+            <option value = "8:00am"></option>
+            <option value = "8:30am"></option>
+            <option value = "9:00am"></option>
+            <option value = "9:30am"></option>
+            <option value = "10:00am"></option>
+            <option value = "10:30am"></option>
+            <option value = "11:00am"></option>
+            <option value = "11:30am"></option>
+            <option value = "12:00am"></option>
+            <option value = "12:30am"></option>
+            <option value = "01:00pm"></option>
+            <option value = "01:30pm"></option>
+            <option value = "02:00pm"></option>
+            <option value = "02:30pm"></option>
+            <option value = "03:00pm"></option>
+            <option value = "03:30pm"></option>
+            <option value = "04:00pm"></option>
+            <option value = "04:30pm"></option>
+            <option value = "05:00pm"></option>
+            <option value = "05:30pm"></option>
+            <option value = "06:00pm"></option>
+          </datalist>
         </div>
       </div>
       <div className="assign_user">
         <div>Assign User</div>
         <input
+          className="input-icon"
           placeholder="User Name"
           value={data.assigned_user}
           onChange={(e) => setData({ ...data, assigned_user: e.target.value })}
@@ -150,12 +178,14 @@ const TaskBody = () => {
       <div style  = {{display: "flex", justifyContent: "space-between"}}>
         <div>
           {editData.editTaskData && (
-            <button
-              className="form_button cancel"
-              onClick={handleDelete}
-            >
-              <i className="fa fa-trash" style = {{fontSize: '20px'}}></i>
-            </button>
+            <Tooltip title="Delete Task">
+              <button
+                className="form_button edit"
+                onClick={handleDelete}
+              >
+                <i className="fa fa-trash" style = {{fontSize: '20px'}}></i>
+              </button>
+            </Tooltip>
           )}
         </div>
         <div>
