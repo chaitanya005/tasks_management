@@ -1,0 +1,51 @@
+.task_body {
+  padding: 10px;
+  background-color: #edf7fc;
+  border-radius: 0 0 3px 3px;
+  border: 1px solid #eee;
+}
+
+.task_description > input {
+  width: 95%;
+}
+
+.date_time {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+input {
+  margin-top: 10px;
+  font-size: 16px;
+  padding: 8px;
+}
+
+.assign_user {
+  margin-top: 10px;
+}
+
+.assign_user > input {
+  width: 95%;
+}
+
+.form_buttons {
+  /* display: flex; */
+  justify-content: flex-end;
+}
+
+.form_button.cancel {
+  background-color: #edf7fc;
+  color: #000;
+  border: none;
+}
+
+.form_button {
+  padding: 3px;
+  font-size: 14px;
+  margin-top: 10px;
+  color: white;
+  border-radius: 5px;
+  height: 30px;
+  background-color: #47bb7f;
+}

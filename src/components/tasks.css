@@ -1,0 +1,13 @@
+.tasks {
+  display: flex;
+  background-color: #edf7fc;
+  justify-content: space-between;
+  padding: 2%;
+  border-radius: 0 0 3px 3px;
+}
+
+.form_button.edit {
+  background-color: #edf7fc;
+  color: #000;
+  border: 1px solid #ddd;
+}
