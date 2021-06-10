@@ -7,7 +7,7 @@ const TaskHeader = () =>{
     const dispatch  = useDispatch()
 
     const handleClick = () =>{
-        dispatch(updateTaskState({taskIsHidden : false}))
+        dispatch(updateTaskState({taskBodyIsHidden : false}))
     }
     return (
         <div className="task_header">

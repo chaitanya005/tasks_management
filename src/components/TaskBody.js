@@ -8,7 +8,8 @@ import {
   editTask,
   updateTaskState,
   setTaskId,
-  getTaskState
+  getTaskState,
+  updateState
 } from "../features/DataSlice/DataSclice";
 // import {  } from "../features/DataSlice/DataSclice";
 
@@ -19,7 +20,7 @@ const TaskBody = () => {
   const dispatch = useDispatch();
   const [data, setData] = useState({
     task_msg: "",
-    assigned_user: "",
+    assigned_user: "Subi Sir",
     task_date: "",
     task_time: Date.now(),
     is_completed: 0,
@@ -77,8 +78,9 @@ const TaskBody = () => {
   };
 
   const handleCancel = () => {
-    dispatch(updateTaskState({ taskIsHidden: true }));
+    dispatch(updateTaskState({ taskBodyIsHidden: true }));
     dispatch(editTask({ editTaskData: null }));
+    dispatch(updateState({ hideTasks: false }))
   };
 
   const handleDelete = () => {
@@ -109,7 +111,7 @@ const TaskBody = () => {
       setData({
         ...data,
         task_msg: editData.editTaskData.task_msg,
-        assigned_user: editData.editTaskData.assigned_user,
+        assigned_user: editData.editTaskData.user_name,
         task_date: editData.editTaskData.task_date,
       });
     }
@@ -172,7 +174,7 @@ const TaskBody = () => {
           className="input-icon"
           placeholder="User Name"
           value={data.assigned_user}
-          onChange={(e) => setData({ ...data, assigned_user: e.target.value })}
+          // onChange={(e) => setData({ ...data, assigned_user: e.target.value })}
         />
       </div>
       <div style  = {{display: "flex", justifyContent: "space-between"}}>
@@ -180,7 +182,7 @@ const TaskBody = () => {
           {editData.editTaskData && (
             <Tooltip title="Delete Task">
               <button
-                className="form_button edit"
+                className="form_button del"
                 onClick={handleDelete}
               >
                 <i className="fa fa-trash" style = {{fontSize: '20px'}}></i>

@@ -1,13 +1,14 @@
 .tasks {
   display: flex;
-  background-color: #edf7fc;
+  background-color: #fff;
   justify-content: space-between;
   padding: 2%;
   border-radius: 0 0 3px 3px;
+  border: 1px solid #e8e8e8;
 }
 
 .form_button.edit {
-  background-color: #edf7fc;
+  background-color: #fff;
   color: #000;
-  border: 1px solid #ddd;
+  border: 1px solid #e8e8e8;
 }

@@ -9,6 +9,7 @@ import {
   updateTaskState,
   editTask,
   getTaskState,
+  updateState,
 } from "../features/DataSlice/DataSclice";
 
 const Tasks = () => {
@@ -39,23 +40,26 @@ const Tasks = () => {
         )
       )
       .catch((e) => console.log(e));
-  }, [taskState.taskIsHidden]);
+  }, [taskState.taskBodyIsHidden]);
 
   const handleEdit = (item) => {
-    dispatch(updateTaskState({ taskIsHidden: false }));
+    dispatch(updateTaskState({ taskBodyIsHidden: false }));
     dispatch(editTask({ editTaskData: item }));
+    dispatch(updateState({ hideTasks: true }))
   };
 
   
 
   return (
     <div>
+      {!taskState.hideTasks ? 
+        <div>
       {data &&
         data.map((item, index) => (
           <div key = {index} className = "tasks">
             <div>
               <div style = {{fontSize: '20px'}}>{item.task_msg}</div>
-              <p style = {{color: 'red'}}>{moment(item.task_date).format("MM/DD/YYYY")}</p>
+              <div style = {{color: 'red'}}>{moment(item.task_date).format("MM/DD/YYYY")}</div>
             </div>
             <Tooltip title="Edit this Task">
               <button
@@ -67,6 +71,8 @@ const Tasks = () => {
             </Tooltip>
           </div>
         ))}
+        </div>
+        : '' }
     </div>
   );
 };

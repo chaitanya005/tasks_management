@@ -14,9 +14,16 @@ function App() {
 
   return (
     <div className="App">
-      <TaskHeader />
-      {!isHidden.taskIsHidden ? <TaskBody /> : null}
-      <Tasks />
+      <div style = {{display: 'flex', flexDirection: 'row'}}>
+        <div className="Side-bar"></div>
+        <div className="top-bar">
+          <div className = "task">
+            <TaskHeader />
+            {!isHidden.taskBodyIsHidden ? <TaskBody /> : null}
+            <Tasks />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
   padding: 10px;
   background-color: #edf7fc;
   border-radius: 0 0 3px 3px;
-  border: 1px solid #eee;
+  border: 1px solid #e8e8e8;
 }
 
 .task_description > input {
@@ -59,6 +59,13 @@ input {
   background-color: #edf7fc;
   color: #000;
   border: none;
+}
+
+.form_button.del {
+  width: 100%;
+  background-color: #edf7fc;
+  border: none;
+  color: grey;
 }
 
 .form_button {
