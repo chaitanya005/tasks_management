@@ -108,14 +108,32 @@ const TaskBody = () => {
 
   useEffect(() => {
     if (editData.editTaskData) {
+      var time = editData.editTaskData.task_time
+      /* var hours = Math.floor (time / 3600)
+      var min = Math.floor (time / 60 ) - hours * 60 */
+      console.log(time)
+
       setData({
         ...data,
+        // task_time: `${hours}:${min}`,
         task_msg: editData.editTaskData.task_msg,
         assigned_user: editData.editTaskData.user_name,
         task_date: editData.editTaskData.task_date,
       });
     }
   }, []);
+
+
+  console.log(data)
+
+  const handleTime = (e) => {
+    var a = e.target.value.split(':')
+    var sec = (+a[0]) * 60 * 60 + (+a[1]) * 60
+    setData({
+      ...data,
+      task_time: sec
+    })
+  }
 
   return (
     <div className="task_body">
@@ -141,30 +159,30 @@ const TaskBody = () => {
           <div>Time</div>
           <div className = "input-icons">
             <i className="fa fa-clock-o icon"></i>
-            <input list="time" placeholder = "Time" className = "input-field"/>
+            <input list="time" placeholder = "Time" className = "input-field" onChange = {(e) => handleTime(e)}/>
           </div>
           <datalist id = "time">
-            <option value = "8:00am"></option>
-            <option value = "8:30am"></option>
-            <option value = "9:00am"></option>
-            <option value = "9:30am"></option>
-            <option value = "10:00am"></option>
-            <option value = "10:30am"></option>
-            <option value = "11:00am"></option>
-            <option value = "11:30am"></option>
-            <option value = "12:00am"></option>
-            <option value = "12:30am"></option>
-            <option value = "01:00pm"></option>
-            <option value = "01:30pm"></option>
-            <option value = "02:00pm"></option>
-            <option value = "02:30pm"></option>
-            <option value = "03:00pm"></option>
-            <option value = "03:30pm"></option>
-            <option value = "04:00pm"></option>
-            <option value = "04:30pm"></option>
-            <option value = "05:00pm"></option>
-            <option value = "05:30pm"></option>
-            <option value = "06:00pm"></option>
+            <option value = "8:00"></option>
+            <option value = "8:30"></option>
+            <option value = "9:00"></option>
+            <option value = "9:30"></option>
+            <option value = "10:00"></option>
+            <option value = "10:30"></option>
+            <option value = "11:00"></option>
+            <option value = "11:30"></option>
+            <option value = "12:00"></option>
+            <option value = "12:30"></option>
+            <option value = "13:00"></option>
+            <option value = "13:30"></option>
+            <option value = "14:00"></option>
+            <option value = "14:30"></option>
+            <option value = "15:00"></option>
+            <option value = "15:30"></option>
+            <option value = "16:00"></option>
+            <option value = "16:30"></option>
+            <option value = "17:00"></option>
+            <option value = "17:30"></option>
+            <option value = "18:00"></option>
           </datalist>
         </div>
       </div>
