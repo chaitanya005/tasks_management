@@ -9,7 +9,8 @@ import {
   updateTaskState,
   setTaskId,
   getTaskState,
-  updateState
+  updateState,
+  setTaskIds
 } from "../features/DataSlice/DataSclice";
 // import {  } from "../features/DataSlice/DataSclice";
 
@@ -18,19 +19,76 @@ const TaskBody = () => {
   let token =
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjMxNTk1NzEsIm5iZiI6MTYyMzE1OTU3MSwianRpIjoiYjFjYzIxMTItNTc2My00MDM5LTk5NTYtOTAxZThiZDg4YzFlIiwiaWRlbnRpdHkiOnsibmFtZSI6IlN1YmkgU2lyIiwiZW1haWwiOiJzbWl0aGNoZXJ5bEB5YWhvby5jb20iLCJ1c2VyX2lkIjoidXNlcl82YmVlYzQ1OTkxNWY0NTA3YThkMjUyMGU2MGUwM2MzZSIsImNvbXBhbnlfaWQiOiJjb21wYW55XzNjNjhjZDk0ZWJkNjQ4Yzc4ZDc2ODcyY2ZhOWY4Y2ZiIiwiaWNvbiI6Imh0dHA6Ly93d3cuZ3JhdmF0YXIuY29tL2F2YXRhci9mMmU5YWNkZWM4MTdlMjRkMjk4MGQ4NTNlODkzODVmNT9kZWZhdWx0PWh0dHBzJTNBJTJGJTJGczMuc2xvb3ZpLmNvbSUyRmF2YXRhci1kZWZhdWx0LWljb24ucG5nIiwiYnlfZGVmYXVsdCI6Im91dHJlYWNoIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.6VhLutgONj-7U33y6nHGHxnRTlvAIxMl401KBxueqpc";
   const dispatch = useDispatch();
+  const [time, setTime] = useState("")
   const [data, setData] = useState({
     task_msg: "",
-    assigned_user: "Subi Sir",
+    assigned_user: "",
     task_date: "",
-    task_time: Date.now(),
+    task_time: "",
     is_completed: 0,
     time_zone: Date.now(),
   });
 
+  const [users, setUsers] = useState("")
+
+  const timeArray = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', 
+  '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', 
+  '16:30', '17:00', '17:30', '18:00']
+
+
   const handleSubmit = () => {
     if (editData.editTaskData) {
-      if (data.assigned_user !== "" && data.is_completed !== ""  && data.task_date !== "" && data.task_time !== "") {
-      axios
+      if (data.assigned_user !== "" && data.is_completed !== ""  && data.task_date !== "" && data.task_time !== "" && time !== "") {
+      var a = time.split(':')
+        let timeStamp = new Date(2021, 6, 14, a[0], a[1])
+        // console.log(timeStamp.getTime())
+        setData({
+          ...data,
+          task_time: timeStamp.getTime()
+        })
+      } else {
+        alert("Please fill all the fields")
+      }
+    } else {
+        if (data.assigned_user !== "" && data.is_completed !== ""  && data.task_date !== "" && time !== "") {
+          var a = time.split(':')
+          let timeStamp = new Date(2021, 6, 14, a[0], a[1])
+          setData({
+            ...data,
+            task_time: timeStamp.getTime()
+          })
+        } else {
+            alert("Please fill all the fields")
+          }
+      }
+  };
+
+  useEffect(() => {
+    if (!editData.editTaskData) {
+      if (Number.isInteger(data.task_time)) {
+        axios
+              .post(
+                "https://stage.api.sloovi.com/task/lead_6996a7dcdddc4af3b4f71ccb985cea38",
+                data,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                }
+              )
+              .then((data) => {
+                if (data) {
+                  dispatch(setTaskId({ taskIds: data.data.results.id }));
+                  handleCancel();
+                }
+              })
+              .catch((e) => console.log(e));
+      } 
+    } else {
+      if (Number.isInteger(data.task_time)) {
+        axios
         .put(
           `https://stage.api.sloovi.com/task/lead_6996a7dcdddc4af3b4f71ccb985cea38/${editData.editTaskData.id}`,
           data,
@@ -49,33 +107,9 @@ const TaskBody = () => {
         })
         .catch((e) => console.log(e));
       }
-    } else {
-      if (data.assigned_user !== "" && data.is_completed !== ""  && data.task_date !== "" && data.task_time !== "") {
-        // console.log(data)
-     axios
-        .post(
-          "https://stage.api.sloovi.com/task/lead_6996a7dcdddc4af3b4f71ccb985cea38",
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((data) => {
-          if (data) {
-            dispatch(setTaskId({ taskIds: data.data.results.id }));
-            handleCancel();
-          }
-        })
-        .catch((e) => console.log(e));
-      } else {
-        alert("Please fill All the fields!")
-      }
     }
-  };
+
+  }, [data.task_time])
 
   const handleCancel = () => {
     dispatch(updateTaskState({ taskBodyIsHidden: true }));
@@ -100,6 +134,11 @@ const TaskBody = () => {
         .then((data) => {
           if (data) {
             handleCancel();
+            let newtaskIds = editData.taskIds.filter((id) => id !== editData.editTaskData.id)
+            dispatch(setTaskIds({
+              newtaskIds
+            }))
+            window.location.reload()
           }
         })
         .catch((e) => console.log(e));
@@ -109,30 +148,45 @@ const TaskBody = () => {
   useEffect(() => {
     if (editData.editTaskData) {
       var time = editData.editTaskData.task_time
-      /* var hours = Math.floor (time / 3600)
-      var min = Math.floor (time / 60 ) - hours * 60 */
-      console.log(time)
+      var hours = new Date(time).getHours()
+      var min = new Date(time).getMinutes()
+      if (min < 10) {
+        min = min + '0'
+      }
 
       setData({
         ...data,
-        // task_time: `${hours}:${min}`,
+        task_time: `${hours}:${min}`,
         task_msg: editData.editTaskData.task_msg,
-        assigned_user: editData.editTaskData.user_name,
+        assigned_user: editData.editTaskData.assigned_user,
         task_date: editData.editTaskData.task_date,
       });
+
+      setTime(`${hours}:${min}`)
     }
   }, []);
 
 
-  console.log(data)
+  useEffect(() => {
+    axios.get("https://stage.api.sloovi.com/team", 
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then(res => {
+        // console.log(res.data.results.data)
+        setUsers(res.data.results.data)
+      })
+      .catch(err => console.log(err))
+    }, [])
+
+
 
   const handleTime = (e) => {
-    var a = e.target.value.split(':')
-    var sec = (+a[0]) * 60 * 60 + (+a[1]) * 60
-    setData({
-      ...data,
-      task_time: sec
-    })
+    setTime(e.target.value)
   }
 
   return (
@@ -158,42 +212,39 @@ const TaskBody = () => {
         <div className="time" style = {{marginLeft: "5%"}}>
           <div>Time</div>
           <div className = "input-icons">
-            <i className="fa fa-clock-o icon"></i>
-            <input list="time" placeholder = "Time" className = "input-field" onChange = {(e) => handleTime(e)}/>
+            <label>
+              <i className="fa fa-clock-o icon"></i>
+              <input list="time" placeholder = "Time" value = {time} className = "input-field" onChange = {(e) => handleTime(e)}/>
+            </label>
           </div>
           <datalist id = "time">
-            <option value = "8:00"></option>
-            <option value = "8:30"></option>
-            <option value = "9:00"></option>
-            <option value = "9:30"></option>
-            <option value = "10:00"></option>
-            <option value = "10:30"></option>
-            <option value = "11:00"></option>
-            <option value = "11:30"></option>
-            <option value = "12:00"></option>
-            <option value = "12:30"></option>
-            <option value = "13:00"></option>
-            <option value = "13:30"></option>
-            <option value = "14:00"></option>
-            <option value = "14:30"></option>
-            <option value = "15:00"></option>
-            <option value = "15:30"></option>
-            <option value = "16:00"></option>
-            <option value = "16:30"></option>
-            <option value = "17:00"></option>
-            <option value = "17:30"></option>
-            <option value = "18:00"></option>
+            {timeArray.map(function(time) {
+                return <option value={time}></option>
+            })}
           </datalist>
         </div>
       </div>
       <div className="assign_user">
         <div>Assign User</div>
-        <input
+        {/* <input
           className="input-icon"
           placeholder="User Name"
-          value={data.assigned_user}
+          // value={data.assigned_user}
           // onChange={(e) => setData({ ...data, assigned_user: e.target.value })}
-        />
+        /> */}
+        <input list="users" value={data.assigned_user} onChange={(e) => setData({...data, assigned_user: e.target.value})} />
+        <datalist id = "users">
+        {users && users.map((user) => {
+          return (
+            <div>
+            {user.user_status === "accepted" ? 
+              <option value={user.name}></option>
+            : ''}
+            </div>
+          )
+        })}
+        </datalist>
+
       </div>
       <div style  = {{display: "flex", justifyContent: "space-between"}}>
         <div>

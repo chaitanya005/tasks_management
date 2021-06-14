@@ -22,10 +22,13 @@ const DataSclice = createSlice({
     },
     updateState: (state, action) => {
       state.hideTasks = action.payload.hideTasks
+    },
+    setTaskIds: (state, action) => {
+      state.taskIds.splice(0, state.taskIds.length, ...action.payload.newtaskIds)
     }
   },
 });
 
 export const getTaskState = (state) => state.global;
-export const { updateTaskState, editTask, setTaskId, updateState } = DataSclice.actions;
+export const { updateTaskState, editTask, setTaskId, updateState, setTaskIds } = DataSclice.actions;
 export default DataSclice.reducer;

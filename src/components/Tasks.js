@@ -49,11 +49,12 @@ const Tasks = () => {
   };
 
   
+  // console.log(data)
 
   return (
     <div>
       {!taskState.hideTasks ? 
-        <div>
+        <div style = {{overflow: 'auto', height: '500px'}}>
       {data &&
         data.map((item, index) => (
           <div key = {index} className = "tasks">
